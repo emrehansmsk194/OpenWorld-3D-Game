@@ -7,17 +7,19 @@ using UnityEngine.EventSystems;
 public class CharacterMoving : MonoBehaviour
 {
     public float moveSpeed = 5f;
+    public float jumpForce = 2f;
     public float turnSpeed = 20f; // Karakterin dönüþ hýzý
-    public float speedForAnim;
     public bool isGrounded;
     public Rigidbody rb;
-    private Vector3 moveDirection = Vector3.zero; // Hareket yönünü tutan vektör
+    CharacterAnimations animations;
 
 
 
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
+        animations = GetComponentInChildren<CharacterAnimations>();
+        isGrounded = true;
 
     }
 
@@ -49,8 +51,32 @@ public class CharacterMoving : MonoBehaviour
         {
             currentSpeed *= 4f;
         }
-        // Hareketi uygula
+
+        if (Input.GetButtonDown("Jump") && isGrounded)
+        {
+            animations.anim.SetBool("isGrounded", isGrounded);
+            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+            isGrounded = false;
+
+        }
         Vector3 movement = transform.forward * currentSpeed * Time.deltaTime;
         rb.MovePosition(rb.position + movement);
+        animations.anim.SetBool("isGrounded", isGrounded);
+       
     }
+
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.contacts.Length > 0)
+        {
+            ContactPoint contact = collision.contacts[0];
+            if (collision.gameObject.tag == "Ground")
+            {
+                // Eðer temas edilen yüzey yukarý yönlüyse (yani altta), karakterin zeminde olduðunu belirt
+                isGrounded = true;
+            }
+        }
+    }
+
 }

@@ -6,7 +6,6 @@ public class CharacterAnimations : MonoBehaviour
 {
     public Animator anim;
     public bool isFaster;
-    CharacterMoving CharacterMoving;
     void Start()
     {
         anim = GetComponent<Animator>();
