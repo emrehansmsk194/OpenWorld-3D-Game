@@ -19,13 +19,18 @@ public class RacingCarScript : MonoBehaviour
     // Wheels
     [SerializeField] private Transform frontLeftWheelTransform, frontRightWheelTransform;
     [SerializeField] private Transform rearLeftWheelTransform, rearRightWheelTransform;
+    public bool activeControl = false;
 
     private void FixedUpdate()
     {
-        GetInput();
-        HandleMotor();
-        HandleSteering();
-        UpdateWheels();
+        if (activeControl)
+        {
+            GetInput();
+            HandleMotor();
+            HandleSteering();
+            UpdateWheels();
+        }
+        
     }
 
     private void GetInput()
